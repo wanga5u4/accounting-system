@@ -41,6 +41,10 @@ const els = {
   loginLink: document.getElementById('loginLink'),
   registerLink: document.getElementById('registerLink'),
   logoutLink: document.getElementById('logoutLink'),
+  guestActions: document.getElementById('guestActions'),
+  userActions: document.getElementById('userActions'),
+  guestPanel: document.getElementById('guestPanel'),
+  dashboard: document.getElementById('dashboard'),
 };
 
 async function api(path, options = {}) {
@@ -204,13 +208,13 @@ async function loadRecords() {
 async function loadCurrentUser() {
   currentUser = await api('/me');
 
-  els.currentUser.classList.toggle('hidden', !currentUser.loggedIn);
-  els.logoutLink.classList.toggle('hidden', !currentUser.loggedIn);
-  els.loginLink.classList.toggle('hidden', currentUser.loggedIn);
-  els.registerLink.classList.toggle('hidden', currentUser.loggedIn);
+  els.guestActions.classList.toggle('d-none', currentUser.loggedIn);
+  els.userActions.classList.toggle('d-none', !currentUser.loggedIn);
+  els.guestPanel.classList.toggle('d-none', currentUser.loggedIn);
+  els.dashboard.classList.toggle('d-none', !currentUser.loggedIn);
 
   if (currentUser.loggedIn) {
-    els.currentUser.textContent = `当前用户：${currentUser.username}`;
+    els.currentUser.textContent = `欢迎，${currentUser.username}`;
   }
 
   setRecordControlsEnabled(currentUser.loggedIn);
@@ -357,7 +361,6 @@ async function init() {
       summary = { totalIncome: 0, totalExpense: 0, balance: 0 };
       records = [];
       render();
-      showToast('请先登录后再管理记账记录');
     }
   } catch (err) {
     showToast('无法连接服务器，请确认后端已启动');

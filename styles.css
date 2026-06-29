@@ -283,7 +283,8 @@ tbody tr:hover {
   padding: 32px 0 8px;
 }
 
-.hidden { display: none !important; }
+.hidden,
+.d-none { display: none !important; }
 
 .toast {
   position: fixed;

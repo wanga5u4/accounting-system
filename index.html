@@ -5,104 +5,142 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>简易记账</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="app">
-    <header class="header">
-      <div class="header-top">
-        <div>
-          <h1>简易记账</h1>
-          <p class="subtitle">记录每一笔收支，掌握你的财务</p>
+  <div class="container py-4">
+    <header class="mb-4">
+      <nav class="navbar navbar-expand-lg bg-white border rounded-3 px-3 shadow-sm">
+        <a class="navbar-brand fw-bold" href="/">简易记账</a>
+        <div class="ms-auto d-flex flex-wrap align-items-center gap-2">
+          <div id="guestActions" class="d-flex gap-2">
+            <a class="btn btn-outline-primary" id="loginLink" href="/login">登录</a>
+            <a class="btn btn-primary" id="registerLink" href="/register">注册</a>
+          </div>
+          <div id="userActions" class="d-none d-flex flex-wrap align-items-center gap-2">
+            <span class="text-muted fw-semibold" id="currentUser"></span>
+            <a class="btn btn-outline-primary btn-sm" href="#recordFormSection">添加记录</a>
+            <a class="btn btn-outline-primary btn-sm" href="#recordListSection">查看记录</a>
+            <a class="btn btn-outline-primary btn-sm" href="#statsSection">统计</a>
+            <a class="btn btn-outline-danger btn-sm" id="logoutLink" href="/logout">退出登录</a>
+          </div>
         </div>
-        <nav class="auth-actions" aria-label="用户导航">
-          <span class="user-badge hidden" id="currentUser"></span>
-          <a class="btn btn-ghost" id="loginLink" href="/login">登录</a>
-          <a class="btn btn-primary" id="registerLink" href="/register">注册</a>
-          <a class="btn btn-secondary hidden" id="logoutLink" href="/logout">退出</a>
-        </nav>
-      </div>
-
-      <div class="summary">
-        <div class="summary-card income">
-          <span class="label">总收入</span>
-          <span class="value" id="totalIncome">￥0.00</span>
-        </div>
-        <div class="summary-card expense">
-          <span class="label">总支出</span>
-          <span class="value" id="totalExpense">￥0.00</span>
-        </div>
-        <div class="summary-card balance">
-          <span class="label">结余</span>
-          <span class="value" id="balance">￥0.00</span>
-        </div>
-      </div>
+      </nav>
     </header>
 
-    <main class="main">
-      <section class="panel form-panel">
-        <h2 id="formTitle">添加记录</h2>
-        <form id="recordForm">
-          <input type="hidden" id="recordId">
-          <div class="form-row">
-            <label for="date">日期</label>
-            <input type="date" id="date" required>
+    <section id="guestPanel" class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <h1 class="h3 mb-3">欢迎使用简易记账</h1>
+        <p class="text-muted mb-4">登录后即可添加记录、查看账单和统计收支。</p>
+        <div class="d-flex justify-content-center gap-2">
+          <a class="btn btn-primary" href="/login">登录</a>
+          <a class="btn btn-outline-primary" href="/register">注册</a>
+        </div>
+      </div>
+    </section>
+
+    <main id="dashboard" class="d-none">
+      <section id="statsSection" class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small mb-1">总收入</div>
+              <div class="fs-4 fw-bold text-success" id="totalIncome">￥0.00</div>
+            </div>
           </div>
-          <div class="form-row">
-            <label for="type">类型</label>
-            <select id="type" required>
-              <option value="expense">支出</option>
-              <option value="income">收入</option>
-            </select>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small mb-1">总支出</div>
+              <div class="fs-4 fw-bold text-danger" id="totalExpense">￥0.00</div>
+            </div>
           </div>
-          <div class="form-row">
-            <label for="category">分类</label>
-            <select id="category" required></select>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="text-muted small mb-1">结余</div>
+              <div class="fs-4 fw-bold text-primary" id="balance">￥0.00</div>
+            </div>
           </div>
-          <div class="form-row">
-            <label for="amount">金额</label>
-            <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
-          </div>
-          <div class="form-row">
-            <label for="note">备注</label>
-            <input type="text" id="note" placeholder="可选备注" maxlength="100">
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="submitBtn">添加记录</button>
-            <button type="button" class="btn btn-secondary hidden" id="cancelBtn">取消编辑</button>
-          </div>
-        </form>
+        </div>
       </section>
 
-      <section class="panel list-panel">
-        <div class="list-header">
-          <h2>记录列表</h2>
-          <div class="filters">
-            <select id="filterType">
-              <option value="all">全部类型</option>
-              <option value="income">仅收入</option>
-              <option value="expense">仅支出</option>
-            </select>
-            <input type="month" id="filterMonth" title="按月份筛选">
-            <button type="button" class="btn btn-ghost" id="clearFilter">清除筛选</button>
+      <div class="row g-4">
+        <section id="recordFormSection" class="col-lg-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h2 class="h5 mb-3" id="formTitle">添加记录</h2>
+              <form id="recordForm">
+                <input type="hidden" id="recordId">
+                <div class="mb-3">
+                  <label class="form-label" for="date">日期</label>
+                  <input class="form-control" type="date" id="date" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="type">类型</label>
+                  <select class="form-select" id="type" required>
+                    <option value="expense">支出</option>
+                    <option value="income">收入</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="category">分类</label>
+                  <select class="form-select" id="category" required></select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="amount">金额</label>
+                  <input class="form-control" type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="note">备注</label>
+                  <input class="form-control" type="text" id="note" placeholder="可选备注" maxlength="100">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="submit" class="btn btn-primary flex-fill" id="submitBtn">添加记录</button>
+                  <button type="button" class="btn btn-outline-secondary hidden" id="cancelBtn">取消编辑</button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>日期</th>
-                <th>类型</th>
-                <th>分类</th>
-                <th>金额</th>
-                <th>备注</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="recordList"></tbody>
-          </table>
-        </div>
-        <p class="empty-tip hidden" id="emptyTip">暂无记录，添加第一条吧。</p>
-      </section>
+        </section>
+
+        <section id="recordListSection" class="col-lg-8">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h2 class="h5 mb-0">记录列表</h2>
+                <div class="d-flex flex-wrap gap-2">
+                  <select class="form-select form-select-sm w-auto" id="filterType">
+                    <option value="all">全部类型</option>
+                    <option value="income">仅收入</option>
+                    <option value="expense">仅支出</option>
+                  </select>
+                  <input class="form-control form-control-sm w-auto" type="month" id="filterMonth" title="按月份筛选">
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="clearFilter">清除筛选</button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>日期</th>
+                      <th>类型</th>
+                      <th>分类</th>
+                      <th>金额</th>
+                      <th>备注</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recordList"></tbody>
+                </table>
+              </div>
+              <p class="text-center text-muted py-4 hidden" id="emptyTip">暂无记录，添加第一条吧。</p>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
@@ -117,7 +155,7 @@
       <h3>确认删除</h3>
       <p>确定要删除这条记录吗？此操作无法撤销。</p>
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="cancelDelete">取消</button>
+        <button type="button" class="btn btn-outline-secondary" id="cancelDelete">取消</button>
         <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
       </div>
     </div>
