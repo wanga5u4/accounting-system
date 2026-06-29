@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户注册 - 简易记账</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="auth-page">
+    <main class="panel auth-panel">
+      <div class="auth-header">
+        <h1>用户注册</h1>
+        <p>创建账号后即可为后续个人账本隔离做准备</p>
+      </div>
+
+      {% if errors %}
+        <div class="alert alert-error">
+          {% for error in errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('register') }}">
+        <div class="form-row">
+          <label for="username">用户名</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value="{{ form.get('username', '') }}"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="email">邮箱</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value="{{ form.get('email', '') }}"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="password">密码</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            minlength="8"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="confirm_password">确认密码</label>
+          <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            minlength="8"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">注册</button>
+          <a class="btn btn-secondary auth-link" href="{{ url_for('login') }}">去登录</a>
+        </div>
+      </form>
+
+      <p class="auth-switch">
+        <a href="{{ url_for('index') }}">返回首页</a>
+      </p>
+    </main>
+  </div>
+</body>
+</html>

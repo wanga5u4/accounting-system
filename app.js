@@ -11,6 +11,7 @@ let records = [];
 let summary = { totalIncome: 0, totalExpense: 0, balance: 0 };
 let editingId = null;
 let deletingId = null;
+let currentUser = null;
 
 const els = {
   form: document.getElementById('recordForm'),
@@ -36,6 +37,10 @@ const els = {
   confirmDelete: document.getElementById('confirmDelete'),
   toast: document.getElementById('toast'),
   loadingOverlay: document.getElementById('loadingOverlay'),
+  currentUser: document.getElementById('currentUser'),
+  loginLink: document.getElementById('loginLink'),
+  registerLink: document.getElementById('registerLink'),
+  logoutLink: document.getElementById('logoutLink'),
 };
 
 async function api(path, options = {}) {
@@ -47,7 +52,9 @@ async function api(path, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.error || '请求失败，请稍后重试');
+    const error = new Error(data.error || '请求失败，请稍后重试');
+    error.status = response.status;
+    throw error;
   }
 
   return data;
@@ -55,8 +62,19 @@ async function api(path, options = {}) {
 
 function setLoading(loading) {
   els.loadingOverlay.classList.toggle('hidden', !loading);
-  els.submitBtn.disabled = loading;
+  els.submitBtn.disabled = loading || !currentUser?.loggedIn;
   els.confirmDelete.disabled = loading;
+}
+
+function setRecordControlsEnabled(enabled) {
+  els.form
+    .querySelectorAll('input, select, button')
+    .forEach((el) => {
+      el.disabled = !enabled;
+    });
+  els.filterType.disabled = !enabled;
+  els.filterMonth.disabled = !enabled;
+  els.clearFilter.disabled = !enabled;
 }
 
 function showToast(message, type = 'error') {
@@ -181,6 +199,21 @@ async function loadSummary() {
 
 async function loadRecords() {
   records = await api(`/records${buildQuery()}`);
+}
+
+async function loadCurrentUser() {
+  currentUser = await api('/me');
+
+  els.currentUser.classList.toggle('hidden', !currentUser.loggedIn);
+  els.logoutLink.classList.toggle('hidden', !currentUser.loggedIn);
+  els.loginLink.classList.toggle('hidden', currentUser.loggedIn);
+  els.registerLink.classList.toggle('hidden', currentUser.loggedIn);
+
+  if (currentUser.loggedIn) {
+    els.currentUser.textContent = `当前用户：${currentUser.username}`;
+  }
+
+  setRecordControlsEnabled(currentUser.loggedIn);
 }
 
 async function refreshAll() {
@@ -317,7 +350,15 @@ async function init() {
   resetForm();
   setLoading(true);
   try {
-    await refreshAll();
+    await loadCurrentUser();
+    if (currentUser.loggedIn) {
+      await refreshAll();
+    } else {
+      summary = { totalIncome: 0, totalExpense: 0, balance: 0 };
+      records = [];
+      render();
+      showToast('请先登录后再管理记账记录');
+    }
   } catch (err) {
     showToast('无法连接服务器，请确认后端已启动');
   } finally {

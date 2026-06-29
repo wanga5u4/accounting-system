@@ -10,21 +10,30 @@
   <div class="app">
     <header class="header">
       <div class="header-top">
-        <h1>简易记账</h1>
-        <p class="subtitle">记录每一笔收支，掌控你的财务</p>
+        <div>
+          <h1>简易记账</h1>
+          <p class="subtitle">记录每一笔收支，掌握你的财务</p>
+        </div>
+        <nav class="auth-actions" aria-label="用户导航">
+          <span class="user-badge hidden" id="currentUser"></span>
+          <a class="btn btn-ghost" id="loginLink" href="/login">登录</a>
+          <a class="btn btn-primary" id="registerLink" href="/register">注册</a>
+          <a class="btn btn-secondary hidden" id="logoutLink" href="/logout">退出</a>
+        </nav>
       </div>
+
       <div class="summary">
         <div class="summary-card income">
           <span class="label">总收入</span>
-          <span class="value" id="totalIncome">¥0.00</span>
+          <span class="value" id="totalIncome">￥0.00</span>
         </div>
         <div class="summary-card expense">
           <span class="label">总支出</span>
-          <span class="value" id="totalExpense">¥0.00</span>
+          <span class="value" id="totalExpense">￥0.00</span>
         </div>
         <div class="summary-card balance">
           <span class="label">结余</span>
-          <span class="value" id="balance">¥0.00</span>
+          <span class="value" id="balance">￥0.00</span>
         </div>
       </div>
     </header>

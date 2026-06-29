@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户登录 - 简易记账</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="auth-page">
+    <main class="panel auth-panel">
+      <div class="auth-header">
+        <h1>用户登录</h1>
+        <p>登录后系统会记录当前用户身份</p>
+      </div>
+
+      {% if errors %}
+        <div class="alert alert-error">
+          {% for error in errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('login') }}">
+        <div class="form-row">
+          <label for="account">用户名或邮箱</label>
+          <input
+            type="text"
+            id="account"
+            name="account"
+            value="{{ form.get('account', '') }}"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="password">密码</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">登录</button>
+          <a class="btn btn-secondary auth-link" href="{{ url_for('register') }}">注册账号</a>
+        </div>
+      </form>
+
+      <p class="auth-switch">
+        <a href="{{ url_for('index') }}">返回首页</a>
+      </p>
+    </main>
+  </div>
+</body>
+</html>
