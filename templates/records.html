@@ -53,19 +53,25 @@
   </div>
 </section>
 
-<div class="modal hidden" id="deleteModal">
-  <div class="modal-backdrop"></div>
-  <div class="modal-box">
-    <h3>确认删除</h3>
-    <p>确定要删除这条记录吗？此操作无法撤销。</p>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-outline-secondary" id="cancelDelete">取消</button>
-      <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="deleteModalLabel">确认删除</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+      </div>
+      <div class="modal-body">
+        确定要删除这条记录吗？此操作无法撤销。
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="cancelDelete" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
+      </div>
     </div>
   </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/records.js') }}"></script>
+<script src="{{ url_for('static', filename='js/records.js') }}?v=bootstrap-modal-fix"></script>
 {% endblock %}

@@ -17,6 +17,7 @@ const recordsEls = {
 let records = [];
 let deletingId = null;
 let pagination = { page: 1, per_page: 10, total: 0, total_pages: 0 };
+const deleteModal = bootstrap.Modal.getOrCreateInstance(recordsEls.modal);
 
 function buildRecordsQuery() {
   const params = new URLSearchParams();
@@ -75,7 +76,7 @@ async function loadRecords() {
 
 function closeDeleteModal() {
   deletingId = null;
-  recordsEls.modal.classList.add('hidden');
+  deleteModal.hide();
 }
 
 function reloadFromFirstPage() {
@@ -105,15 +106,19 @@ recordsEls.list.addEventListener('click', (event) => {
   const button = event.target.closest('[data-action="delete"]');
   if (!button) return;
   deletingId = button.dataset.id;
-  recordsEls.modal.classList.remove('hidden');
+  deleteModal.show();
 });
-recordsEls.cancelDelete.addEventListener('click', closeDeleteModal);
-recordsEls.modal.querySelector('.modal-backdrop').addEventListener('click', closeDeleteModal);
+recordsEls.modal.addEventListener('hidden.bs.modal', () => {
+  deletingId = null;
+  recordsEls.confirmDelete.disabled = false;
+});
 recordsEls.confirmDelete.addEventListener('click', async () => {
   if (!deletingId) return;
+  const recordId = deletingId;
+  recordsEls.confirmDelete.disabled = true;
   setLoading(true);
   try {
-    await api(`/records/${deletingId}`, { method: 'DELETE' });
+    await api(`/records/${encodeURIComponent(recordId)}`, { method: 'DELETE' });
     closeDeleteModal();
     showToast('记录已删除', 'success');
     await loadRecords();
@@ -122,8 +127,9 @@ recordsEls.confirmDelete.addEventListener('click', async () => {
       await loadRecords();
     }
   } catch (err) {
-    showToast(err.message);
+    showToast(`删除失败：${err.message}`);
   } finally {
+    recordsEls.confirmDelete.disabled = false;
     setLoading(false);
   }
 });
