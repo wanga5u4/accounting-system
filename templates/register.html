@@ -1,17 +1,22 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="{{ current_language|replace('_', '-') }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>用户注册 - 简易记账</title>
+  <title>{{ _('用户注册') }} - {{ _('简易记账') }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
   <div class="auth-page">
     <main class="panel auth-panel">
       <div class="auth-header">
-        <h1>用户注册</h1>
-        <p>创建账号后即可为后续个人账本隔离做准备</p>
+        <h1>{{ _('用户注册') }}</h1>
+        <p>{{ _('创建账号后即可为后续个人账本隔离做准备') }}</p>
+      </div>
+      <div class="d-flex gap-2 mb-3">
+        {% for code, label in language_options.items() %}
+          <a class="btn btn-secondary btn-sm {% if current_language == code %}disabled{% endif %}" href="{{ url_for('set_language', language=code) }}">{{ label }}</a>
+        {% endfor %}
       </div>
 
       {% if errors %}
@@ -25,7 +30,7 @@
       <form method="post" action="{{ url_for('register') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-row">
-          <label for="username">用户名</label>
+          <label for="username">{{ _('用户名') }}</label>
           <input
             type="text"
             id="username"
@@ -37,7 +42,7 @@
         </div>
 
         <div class="form-row">
-          <label for="email">邮箱</label>
+          <label for="email">{{ _('邮箱') }}</label>
           <input
             type="email"
             id="email"
@@ -49,7 +54,7 @@
         </div>
 
         <div class="form-row">
-          <label for="password">密码</label>
+          <label for="password">{{ _('密码') }}</label>
           <input
             type="password"
             id="password"
@@ -61,7 +66,7 @@
         </div>
 
         <div class="form-row">
-          <label for="confirm_password">确认密码</label>
+          <label for="confirm_password">{{ _('确认密码') }}</label>
           <input
             type="password"
             id="confirm_password"
@@ -73,13 +78,13 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">注册</button>
-          <a class="btn btn-secondary auth-link" href="{{ url_for('login') }}">去登录</a>
+          <button type="submit" class="btn btn-primary">{{ _('注册') }}</button>
+          <a class="btn btn-secondary auth-link" href="{{ url_for('login') }}">{{ _('去登录') }}</a>
         </div>
       </form>
 
       <p class="auth-switch">
-        <a href="{{ url_for('index') }}">返回首页</a>
+        <a href="{{ url_for('index') }}">{{ _('返回首页') }}</a>
       </p>
     </main>
   </div>

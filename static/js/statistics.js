@@ -37,14 +37,14 @@ function renderTrendChart(trend) {
       labels: trend.map((item) => item.month),
       datasets: [
         {
-          label: '收入',
+          label: T.income || 'Income',
           data: trend.map((item) => item.income),
           borderColor: '#198754',
           backgroundColor: 'rgba(25, 135, 84, 0.12)',
           tension: 0.3,
         },
         {
-          label: '支出',
+          label: T.expense || 'Expense',
           data: trend.map((item) => item.expense),
           borderColor: '#dc3545',
           backgroundColor: 'rgba(220, 53, 69, 0.12)',

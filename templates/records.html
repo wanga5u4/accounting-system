@@ -1,53 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %}记录列表 - 简易记账{% endblock %}
+{% block title %}{{ _('记录列表') }} - {{ _('简易记账') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
   <div>
-    <h1 class="h3 mb-1">记录列表</h1>
-    <p class="text-muted mb-0">按类型和月份筛选你的账目。</p>
+    <h1 class="h3 mb-1">{{ _('记录列表') }}</h1>
+    <p class="text-muted mb-0">{{ _('按类型和月份筛选你的账目。') }}</p>
   </div>
-  <a class="btn btn-primary" href="{{ url_for('add_record_page') }}">添加记录</a>
+  <a class="btn btn-primary" href="{{ url_for('add_record_page') }}">{{ _('添加记录') }}</a>
 </div>
 
 <section class="card border-0 shadow-sm">
   <div class="card-body">
     <div class="d-flex flex-wrap gap-2 mb-3">
       <select class="form-select w-auto" id="filterType">
-        <option value="all">全部类型</option>
-        <option value="income">仅收入</option>
-        <option value="expense">仅支出</option>
+        <option value="all">{{ _('全部类型') }}</option>
+        <option value="income">{{ _('仅收入') }}</option>
+        <option value="expense">{{ _('仅支出') }}</option>
       </select>
       <input class="form-control w-auto" type="month" id="filterMonth">
       <select class="form-select w-auto" id="perPage">
-        <option value="10">每页 10 条</option>
-        <option value="20">每页 20 条</option>
-        <option value="50">每页 50 条</option>
+        <option value="10">{{ _('每页 10 条') }}</option>
+        <option value="20">{{ _('每页 20 条') }}</option>
+        <option value="50">{{ _('每页 50 条') }}</option>
       </select>
-      <button type="button" class="btn btn-outline-secondary" id="clearFilter">清除筛选</button>
+      <button type="button" class="btn btn-outline-secondary" id="clearFilter">{{ _('清除筛选') }}</button>
     </div>
     <div class="table-responsive">
       <table class="table table-hover align-middle">
         <thead>
           <tr>
-            <th>日期</th>
-            <th>类型</th>
-            <th>分类</th>
-            <th>金额</th>
-            <th>备注</th>
-            <th>操作</th>
+            <th>{{ _('日期') }}</th>
+            <th>{{ _('类型') }}</th>
+            <th>{{ _('分类') }}</th>
+            <th>{{ _('金额') }}</th>
+            <th>{{ _('备注') }}</th>
+            <th>{{ _('操作') }}</th>
           </tr>
         </thead>
         <tbody id="recordList"></tbody>
       </table>
     </div>
-    <p class="text-center text-muted py-4 hidden" id="emptyTip">暂无记录。</p>
+    <p class="text-center text-muted py-4 hidden" id="emptyTip">{{ _('暂无记录。') }}</p>
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3" id="paginationBar">
       <div class="text-muted small" id="paginationInfo"></div>
       <div class="btn-group">
-        <button type="button" class="btn btn-outline-secondary btn-sm" id="prevPage">上一页</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" id="nextPage">下一页</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="prevPage">{{ _('上一页') }}</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="nextPage">{{ _('下一页') }}</button>
       </div>
     </div>
   </div>
@@ -57,15 +57,15 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title fs-5" id="deleteModalLabel">确认删除</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        <h2 class="modal-title fs-5" id="deleteModalLabel">{{ _('确认删除') }}</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('关闭') }}"></button>
       </div>
       <div class="modal-body">
-        确定要删除这条记录吗？此操作无法撤销。
+        {{ _('确定要删除这条记录吗？此操作无法撤销。') }}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" id="cancelDelete" data-bs-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
+        <button type="button" class="btn btn-outline-secondary" id="cancelDelete" data-bs-dismiss="modal">{{ _('取消') }}</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">{{ _('删除') }}</button>
       </div>
     </div>
   </div>

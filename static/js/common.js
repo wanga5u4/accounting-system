@@ -1,11 +1,12 @@
 const API_BASE = '/api';
+const T = window.I18N || {};
 
 const CATEGORIES = {
-  income: ['工资', '奖金', '理财', '兼职', '其他收入'],
-  expense: ['餐饮', '交通', '购物', '住房', '娱乐', '医疗', '教育', '其他支出'],
+  income: T.categories?.income || [],
+  expense: T.categories?.expense || [],
 };
 
-const TYPE_LABELS = { income: '收入', expense: '支出' };
+const TYPE_LABELS = T.typeLabels || { income: 'income', expense: 'expense' };
 
 async function api(path, options = {}) {
   const csrfMeta = document.querySelector('meta[name="csrf-token"]');
@@ -22,7 +23,7 @@ async function api(path, options = {}) {
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.error || '请求失败，请稍后重试');
+    throw new Error(data.error || T.requestFailed || 'Request failed. Please try again later.');
   }
   return data;
 }
@@ -43,7 +44,10 @@ function currentMonthStr() {
 
 function formatDate(dateStr) {
   const [year, month, day] = dateStr.split('-');
-  return `${year}年${month}月${day}日`;
+  return (T.dateFormat || '%(year)s-%(month)s-%(day)s')
+    .replace('%(year)s', year)
+    .replace('%(month)s', month)
+    .replace('%(day)s', day);
 }
 
 function escapeHtml(str) {
@@ -87,7 +91,7 @@ function applyBudgetView(budget) {
   const percent = Number(budget.percent || 0);
   const progress = Math.min(percent, 100);
   if (amountEl) amountEl.value = budget.amount ? Number(budget.amount).toFixed(2) : '';
-  usedEl.textContent = `已用 ${formatMoney(budget.used)}`;
+  usedEl.textContent = (T.used || 'Used %(amount)s').replace('%(amount)s', formatMoney(budget.used));
   percentEl.textContent = `${percent.toFixed(1)}%`;
   progressEl.style.width = `${progress}%`;
   progressEl.className = 'progress-bar';
@@ -107,5 +111,7 @@ function applyBudgetView(budget) {
     statusEl.classList.add('alert-success');
   }
 
-  statusEl.textContent = `${budget.status}，剩余 ${formatMoney(budget.remaining)}`;
+  statusEl.textContent = (T.remaining || '%(status)s, remaining %(amount)s')
+    .replace('%(status)s', budget.status)
+    .replace('%(amount)s', formatMoney(budget.remaining));
 }

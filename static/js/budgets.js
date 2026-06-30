@@ -26,7 +26,7 @@ budgetEls.save.addEventListener('click', async () => {
         amount: parseFloat(budgetEls.amount.value || '0'),
       }),
     });
-    showToast('预算已保存', 'success');
+    showToast(T.budgetSaved || 'Budget saved', 'success');
     await loadBudget();
   } catch (err) {
     showToast(err.message);

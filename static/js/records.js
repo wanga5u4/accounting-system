@@ -45,17 +45,20 @@ function renderRecords() {
       <td><span class="tag ${record.type}">${TYPE_LABELS[record.type]}</span></td>
       <td>${escapeHtml(record.category)}</td>
       <td class="amount-${record.type}">${record.type === 'income' ? '+' : '-'}${formatMoney(record.amount)}</td>
-      <td>${escapeHtml(record.note || '—')}</td>
+      <td>${escapeHtml(record.note || T.noNote || '—')}</td>
       <td>
         <div class="row-actions">
-          <a class="btn btn-outline-secondary btn-sm" href="/records/${record.id}/edit">编辑</a>
-          <button type="button" class="btn btn-danger btn-sm" data-action="delete" data-id="${record.id}">删除</button>
+          <a class="btn btn-outline-secondary btn-sm" href="/records/${record.id}/edit">${escapeHtml(T.edit || 'Edit')}</a>
+          <button type="button" class="btn btn-danger btn-sm" data-action="delete" data-id="${record.id}">${escapeHtml(T.delete || 'Delete')}</button>
         </div>
       </td>
     </tr>
   `).join('');
 
-  recordsEls.paginationInfo.textContent = `第 ${pagination.page} / ${pagination.total_pages} 页，共 ${pagination.total} 条`;
+  recordsEls.paginationInfo.textContent = (T.pagination || 'Page %(page)s / %(total_pages)s, %(total)s total')
+    .replace('%(page)s', pagination.page)
+    .replace('%(total_pages)s', pagination.total_pages)
+    .replace('%(total)s', pagination.total);
   recordsEls.prevPage.disabled = !pagination.has_prev;
   recordsEls.nextPage.disabled = !pagination.has_next;
 }
@@ -120,14 +123,14 @@ recordsEls.confirmDelete.addEventListener('click', async () => {
   try {
     await api(`/records/${encodeURIComponent(recordId)}`, { method: 'DELETE' });
     closeDeleteModal();
-    showToast('记录已删除', 'success');
+    showToast(T.recordDeleted || 'Record deleted', 'success');
     await loadRecords();
     if (records.length === 0 && pagination.page > 1) {
       pagination.page -= 1;
       await loadRecords();
     }
   } catch (err) {
-    showToast(`删除失败：${err.message}`);
+    showToast((T.deleteFailed || 'Delete failed: %(message)s').replace('%(message)s', err.message));
   } finally {
     recordsEls.confirmDelete.disabled = false;
     setLoading(false);

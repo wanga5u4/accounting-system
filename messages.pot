@@ -1,0 +1,782 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-06-30 23:07+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: server.py:72 templates/base.html:41 templates/settings.html:71
+msgid "免费版"
+msgstr ""
+
+#: server.py:73
+msgid "￥0"
+msgstr ""
+
+#: server.py:74
+msgid "多用户记账"
+msgstr ""
+
+#: server.py:74
+msgid "基础收支统计"
+msgstr ""
+
+#: server.py:74
+msgid "每月预算"
+msgstr ""
+
+#: server.py:74
+msgid "分类占比图"
+msgstr ""
+
+#: server.py:75
+msgid "高级统计、导出和 AI 分析暂未开放"
+msgstr ""
+
+#: server.py:79
+msgid "敬请期待"
+msgstr ""
+
+#: server.py:80
+msgid "高级统计"
+msgstr ""
+
+#: server.py:80
+msgid "数据导出"
+msgstr ""
+
+#: server.py:80
+msgid "自定义分类"
+msgstr ""
+
+#: server.py:80
+msgid "多账本"
+msgstr ""
+
+#: server.py:80
+msgid "AI 财务分析"
+msgstr ""
+
+#: server.py:81
+msgid "当前版本仅展示能力，不接入真实支付"
+msgstr ""
+
+#: server.py:87
+msgid "简体中文"
+msgstr ""
+
+#: server.py:87
+msgid "日本語"
+msgstr ""
+
+#: server.py:92
+msgid "人民币 CNY"
+msgstr ""
+
+#: server.py:93
+msgid "美元 USD"
+msgstr ""
+
+#: server.py:94
+msgid "日元 JPY"
+msgstr ""
+
+#: server.py:95
+msgid "欧元 EUR"
+msgstr ""
+
+#: server.py:200
+msgid "日期格式无效"
+msgstr ""
+
+#: server.py:204
+msgid "类型必须是 income 或 expense"
+msgstr ""
+
+#: server.py:208
+msgid "分类不能为空"
+msgstr ""
+
+#: server.py:212
+msgid "金额格式无效"
+msgstr ""
+
+#: server.py:234
+msgid "用户名不能为空"
+msgstr ""
+
+#: server.py:237
+msgid "邮箱不能为空"
+msgstr ""
+
+#: server.py:239
+msgid "邮箱格式无效"
+msgstr ""
+
+#: server.py:242
+msgid "密码至少需要 8 位"
+msgstr ""
+
+#: server.py:245
+msgid "两次输入的密码不一致"
+msgstr ""
+
+#: server.py:260
+msgid "用户名或邮箱不能为空"
+msgstr ""
+
+#: server.py:263
+msgid "密码不能为空"
+msgstr ""
+
+#: server.py:281
+msgid "昵称不能超过 30 个字符"
+msgstr ""
+
+#: server.py:284
+msgid "语言选项无效"
+msgstr ""
+
+#: server.py:287
+msgid "货币选项无效"
+msgstr ""
+
+#: server.py:292
+msgid "请输入当前密码"
+msgstr ""
+
+#: server.py:294
+msgid "新密码至少需要 8 位"
+msgstr ""
+
+#: server.py:296
+msgid "两次输入的新密码不一致"
+msgstr ""
+
+#: server.py:338
+msgid "CSRF validation failed"
+msgstr ""
+
+#: server.py:342
+msgid "安全验证失败"
+msgstr ""
+
+#: server.py:343
+msgid "请求已过期或安全验证失败，请刷新页面后重试。"
+msgstr ""
+
+#: server.py:345 server.py:358 templates/login.html:62
+#: templates/register.html:87
+msgid "返回首页"
+msgstr ""
+
+#: server.py:355
+#, python-format
+msgid "%(status_code)s 错误"
+msgstr ""
+
+#: server.py:364
+msgid "请求无效，请检查输入后重试。"
+msgstr ""
+
+#: server.py:369
+msgid "没有权限执行此操作。"
+msgstr ""
+
+#: server.py:374
+msgid "页面或资源不存在。"
+msgstr ""
+
+#: server.py:379
+msgid "服务器暂时无法处理请求，请稍后重试。"
+msgstr ""
+
+#: server.py:392
+msgid "请先登录"
+msgstr ""
+
+#: server.py:431 templates/budgets.html:28 templates/dashboard.html:53
+msgid "未设置预算"
+msgstr ""
+
+#: server.py:434
+msgid "已超出预算"
+msgstr ""
+
+#: server.py:436
+msgid "预算即将用完"
+msgstr ""
+
+#: server.py:437
+msgid "预算正常"
+msgstr ""
+
+#: server.py:448
+msgid "请求失败，请稍后重试"
+msgstr ""
+
+#: server.py:450
+msgid "工资"
+msgstr ""
+
+#: server.py:450
+msgid "奖金"
+msgstr ""
+
+#: server.py:450
+msgid "理财"
+msgstr ""
+
+#: server.py:450
+msgid "兼职"
+msgstr ""
+
+#: server.py:450
+msgid "其他收入"
+msgstr ""
+
+#: server.py:451
+msgid "餐饮"
+msgstr ""
+
+#: server.py:451
+msgid "交通"
+msgstr ""
+
+#: server.py:451
+msgid "购物"
+msgstr ""
+
+#: server.py:451
+msgid "住房"
+msgstr ""
+
+#: server.py:451
+msgid "娱乐"
+msgstr ""
+
+#: server.py:451
+msgid "医疗"
+msgstr ""
+
+#: server.py:451
+msgid "教育"
+msgstr ""
+
+#: server.py:451
+msgid "其他支出"
+msgstr ""
+
+#: server.py:453 server.py:466 templates/record_form.html:26
+msgid "收入"
+msgstr ""
+
+#: server.py:453 server.py:467 templates/record_form.html:25
+msgid "支出"
+msgstr ""
+
+#: server.py:454
+#, python-format
+msgid "%(year)s年%(month)s月%(day)s日"
+msgstr ""
+
+#: server.py:455 templates/budgets.html:22 templates/dashboard.html:47
+#, python-format
+msgid "已用 %(amount)s"
+msgstr ""
+
+#: server.py:456
+#, python-format
+msgid "%(status)s，剩余 %(amount)s"
+msgstr ""
+
+#: server.py:457
+msgid "编辑"
+msgstr ""
+
+#: server.py:458 templates/records.html:68
+msgid "删除"
+msgstr ""
+
+#: server.py:459
+msgid "—"
+msgstr ""
+
+#: server.py:460
+#, python-format
+msgid "第 %(page)s / %(total_pages)s 页，共 %(total)s 条"
+msgstr ""
+
+#: server.py:461
+msgid "记录已删除"
+msgstr ""
+
+#: server.py:462
+#, python-format
+msgid "删除失败：%(message)s"
+msgstr ""
+
+#: server.py:463
+msgid "记录已更新"
+msgstr ""
+
+#: server.py:464
+msgid "记录已添加"
+msgstr ""
+
+#: server.py:465
+msgid "预算已保存"
+msgstr ""
+
+#: server.py:528 server.py:830 server.py:1063 server.py:1110
+msgid "记录不存在"
+msgstr ""
+
+#: server.py:529
+msgid "这条记录不存在，或不属于当前登录用户。"
+msgstr ""
+
+#: server.py:531
+msgid "返回记录列表"
+msgstr ""
+
+#: server.py:577
+msgid "当前密码不正确"
+msgstr ""
+
+#: server.py:629
+msgid "设置已保存"
+msgstr ""
+
+#: server.py:677
+msgid "用户名已存在"
+msgstr ""
+
+#: server.py:685
+msgid "邮箱已存在"
+msgstr ""
+
+#: server.py:734
+msgid "用户名/邮箱或密码错误"
+msgstr ""
+
+#: server.py:844 server.py:883 server.py:986
+msgid "月份格式无效"
+msgstr ""
+
+#: server.py:990
+msgid "预算金额格式无效"
+msgstr ""
+
+#: templates/base.html:6 templates/base.html:14 templates/budgets.html:3
+#: templates/dashboard.html:3 templates/login.html:6 templates/message.html:3
+#: templates/premium.html:3 templates/record_form.html:3
+#: templates/records.html:3 templates/register.html:6 templates/settings.html:3
+#: templates/statistics.html:3
+msgid "简易记账"
+msgstr ""
+
+#: templates/base.html:15
+msgid "切换导航"
+msgstr ""
+
+#: templates/base.html:20 templates/dashboard.html:3 templates/dashboard.html:8
+msgid "仪表盘"
+msgstr ""
+
+#: templates/base.html:21
+msgid "记录"
+msgstr ""
+
+#: templates/base.html:22
+msgid "统计"
+msgstr ""
+
+#: templates/base.html:23
+msgid "预算"
+msgstr ""
+
+#: templates/base.html:24
+msgid "设置"
+msgstr ""
+
+#: templates/base.html:39
+#, python-format
+msgid "欢迎，%(name)s"
+msgstr ""
+
+#: templates/base.html:45
+msgid "退出登录"
+msgstr ""
+
+#: templates/base.html:48 templates/login.html:56
+msgid "登录"
+msgstr ""
+
+#: templates/base.html:49 templates/register.html:81
+msgid "注册"
+msgstr ""
+
+#: templates/budgets.html:3 templates/budgets.html:8
+msgid "预算管理"
+msgstr ""
+
+#: templates/budgets.html:9
+msgid "为每个月设置支出预算。"
+msgstr ""
+
+#: templates/budgets.html:18
+msgid "设置预算金额"
+msgstr ""
+
+#: templates/budgets.html:19
+msgid "保存预算"
+msgstr ""
+
+#: templates/dashboard.html:9
+msgid "查看本月概览，快速进入常用功能。"
+msgstr ""
+
+#: templates/dashboard.html:18 templates/statistics.html:15
+msgid "本月收入"
+msgstr ""
+
+#: templates/dashboard.html:26 templates/statistics.html:16
+msgid "本月支出"
+msgstr ""
+
+#: templates/dashboard.html:34 templates/statistics.html:17
+msgid "本月结余"
+msgstr ""
+
+#: templates/dashboard.html:45
+msgid "预算状态"
+msgstr ""
+
+#: templates/dashboard.html:54
+msgid "管理预算"
+msgstr ""
+
+#: templates/dashboard.html:61
+msgid "快捷入口"
+msgstr ""
+
+#: templates/dashboard.html:63 templates/record_form.html:3
+#: templates/record_form.html:8 templates/record_form.html:43
+#: templates/records.html:11
+msgid "添加记录"
+msgstr ""
+
+#: templates/dashboard.html:64
+msgid "查看记录"
+msgstr ""
+
+#: templates/dashboard.html:65
+msgid "查看统计"
+msgstr ""
+
+#: templates/dashboard.html:66
+msgid "设置预算"
+msgstr ""
+
+#: templates/login.html:6 templates/login.html:13
+msgid "用户登录"
+msgstr ""
+
+#: templates/login.html:14
+msgid "登录后系统会记录当前用户身份"
+msgstr ""
+
+#: templates/login.html:33
+msgid "用户名或邮箱"
+msgstr ""
+
+#: templates/login.html:45 templates/register.html:57
+msgid "密码"
+msgstr ""
+
+#: templates/login.html:57
+msgid "注册账号"
+msgstr ""
+
+#: templates/premium.html:9
+msgid "会员能力展示页，为后续高级功能和权限判断预留结构。"
+msgstr ""
+
+#: templates/premium.html:12
+#, python-format
+msgid "当前套餐：%(plan)s"
+msgstr ""
+
+#: templates/premium.html:27
+msgid "当前使用"
+msgstr ""
+
+#: templates/premium.html:52
+msgid "权限结构预留"
+msgstr ""
+
+#: templates/premium.html:56
+msgid "套餐字段"
+msgstr ""
+
+#: templates/premium.html:57
+msgid "用户表已预留 `plan` 和 `premium_until`，后续可接入订单系统。"
+msgstr ""
+
+#: templates/premium.html:62
+msgid "权限判断"
+msgstr ""
+
+#: templates/premium.html:63
+msgid "后端已准备会员能力判断函数，可用于高级统计、导出和 AI 分析。"
+msgstr ""
+
+#: templates/premium.html:68
+msgid "支付状态"
+msgstr ""
+
+#: templates/premium.html:69
+msgid "本版本不接入真实支付，不实现订单、续费或支付回调。"
+msgstr ""
+
+#: templates/premium.html:74
+msgid "升级 Premium（暂未开放）"
+msgstr ""
+
+#: templates/premium.html:75
+msgid "返回设置"
+msgstr ""
+
+#: templates/record_form.html:3 templates/record_form.html:8
+msgid "编辑记录"
+msgstr ""
+
+#: templates/record_form.html:9
+msgid "填写日期、分类和金额。"
+msgstr ""
+
+#: templates/record_form.html:11
+msgid "返回列表"
+msgstr ""
+
+#: templates/record_form.html:19 templates/records.html:34
+msgid "日期"
+msgstr ""
+
+#: templates/record_form.html:23 templates/records.html:35
+msgid "类型"
+msgstr ""
+
+#: templates/record_form.html:30 templates/records.html:36
+msgid "分类"
+msgstr ""
+
+#: templates/record_form.html:34 templates/records.html:37
+msgid "金额"
+msgstr ""
+
+#: templates/record_form.html:38 templates/records.html:38
+msgid "备注"
+msgstr ""
+
+#: templates/record_form.html:39
+msgid "可选备注"
+msgstr ""
+
+#: templates/record_form.html:43
+msgid "保存修改"
+msgstr ""
+
+#: templates/record_form.html:44 templates/records.html:67
+msgid "取消"
+msgstr ""
+
+#: templates/records.html:3 templates/records.html:8
+msgid "记录列表"
+msgstr ""
+
+#: templates/records.html:9
+msgid "按类型和月份筛选你的账目。"
+msgstr ""
+
+#: templates/records.html:18
+msgid "全部类型"
+msgstr ""
+
+#: templates/records.html:19
+msgid "仅收入"
+msgstr ""
+
+#: templates/records.html:20
+msgid "仅支出"
+msgstr ""
+
+#: templates/records.html:24
+msgid "每页 10 条"
+msgstr ""
+
+#: templates/records.html:25
+msgid "每页 20 条"
+msgstr ""
+
+#: templates/records.html:26
+msgid "每页 50 条"
+msgstr ""
+
+#: templates/records.html:28
+msgid "清除筛选"
+msgstr ""
+
+#: templates/records.html:39
+msgid "操作"
+msgstr ""
+
+#: templates/records.html:45
+msgid "暂无记录。"
+msgstr ""
+
+#: templates/records.html:49
+msgid "上一页"
+msgstr ""
+
+#: templates/records.html:50
+msgid "下一页"
+msgstr ""
+
+#: templates/records.html:60
+msgid "确认删除"
+msgstr ""
+
+#: templates/records.html:61
+msgid "关闭"
+msgstr ""
+
+#: templates/records.html:64
+msgid "确定要删除这条记录吗？此操作无法撤销。"
+msgstr ""
+
+#: templates/register.html:6 templates/register.html:13
+msgid "用户注册"
+msgstr ""
+
+#: templates/register.html:14
+msgid "创建账号后即可为后续个人账本隔离做准备"
+msgstr ""
+
+#: templates/register.html:33 templates/settings.html:30
+msgid "用户名"
+msgstr ""
+
+#: templates/register.html:45 templates/settings.html:39
+msgid "邮箱"
+msgstr ""
+
+#: templates/register.html:69
+msgid "确认密码"
+msgstr ""
+
+#: templates/register.html:82
+msgid "去登录"
+msgstr ""
+
+#: templates/settings.html:3 templates/settings.html:8
+msgid "用户设置"
+msgstr ""
+
+#: templates/settings.html:9
+msgid "管理个人资料、显示偏好和登录密码。"
+msgstr ""
+
+#: templates/settings.html:11
+msgid "查看会员权益"
+msgstr ""
+
+#: templates/settings.html:28
+msgid "个人资料"
+msgstr ""
+
+#: templates/settings.html:32
+msgid "用户名暂不支持修改，后续可在账号安全中扩展。"
+msgstr ""
+
+#: templates/settings.html:35
+msgid "昵称"
+msgstr ""
+
+#: templates/settings.html:36
+msgid "例如：小明的账本"
+msgstr ""
+
+#: templates/settings.html:41
+msgid "部署前安全策略：邮箱暂不支持直接修改，后续应接入新邮箱验证流程。"
+msgstr ""
+
+#: templates/settings.html:45
+msgid "语言"
+msgstr ""
+
+#: templates/settings.html:53
+msgid "默认货币"
+msgstr ""
+
+#: templates/settings.html:68
+msgid "当前套餐"
+msgstr ""
+
+#: templates/settings.html:72
+msgid "会员权限字段已预留，当前不接入支付。"
+msgstr ""
+
+#: templates/settings.html:83
+msgid "修改密码"
+msgstr ""
+
+#: templates/settings.html:85
+msgid "当前密码"
+msgstr ""
+
+#: templates/settings.html:89
+msgid "新密码"
+msgstr ""
+
+#: templates/settings.html:93
+msgid "确认新密码"
+msgstr ""
+
+#: templates/settings.html:102
+msgid "保存设置"
+msgstr ""
+
+#: templates/settings.html:103
+msgid "返回仪表盘"
+msgstr ""
+
+#: templates/statistics.html:3 templates/statistics.html:8
+msgid "统计分析"
+msgstr ""
+
+#: templates/statistics.html:9
+msgid "查看月度统计、分类占比和六个月趋势。"
+msgstr ""
+
+#: templates/statistics.html:24
+msgid "支出分类占比"
+msgstr ""
+
+#: templates/statistics.html:32
+msgid "最近六个月收支趋势"
+msgstr ""
+

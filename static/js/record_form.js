@@ -50,13 +50,13 @@ formEl.addEventListener('submit', async (event) => {
         method: 'PUT',
         body: JSON.stringify(payload),
       });
-      showToast('记录已更新', 'success');
+      showToast(T.recordUpdated || 'Record updated', 'success');
     } else {
       await api('/records', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
-      showToast('记录已添加', 'success');
+      showToast(T.recordAdded || 'Record added', 'success');
     }
     window.location.href = '/records';
   } catch (err) {

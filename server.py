@@ -8,6 +8,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
+from flask_babel import Babel, gettext as _
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import get_connection, init_db, row_to_dict
@@ -36,12 +37,14 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=APP_ENV == "production",
+    BABEL_DEFAULT_LOCALE="zh_CN",
+    BABEL_TRANSLATION_DIRECTORIES=str(BASE_DIR / "translations"),
 )
 init_db()
 
 LANGUAGE_OPTIONS = {
-    "zh-CN": "简体中文",
-    "en-US": "English",
+    "zh_CN": "简体中文",
+    "ja": "日本語",
 }
 CURRENCY_OPTIONS = {
     "CNY": "人民币 CNY",
@@ -54,20 +57,87 @@ UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
 EMAIL_RE = re.compile(r"^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$")
 ALLOWED_PER_PAGE = {10, 20, 50}
 DEFAULT_PER_PAGE = 10
-MEMBERSHIP_PLANS = {
-    "free": {
-        "name": "免费版",
-        "price": "￥0",
-        "features": ["多用户记账", "基础收支统计", "每月预算", "分类占比图"],
-        "limits": ["高级统计、导出和 AI 分析暂未开放"],
-    },
-    "premium": {
-        "name": "Premium",
-        "price": "敬请期待",
-        "features": ["高级统计", "数据导出", "自定义分类", "多账本", "AI 财务分析"],
-        "limits": ["当前版本仅展示能力，不接入真实支付"],
-    },
-}
+LOCALE_ALIASES = {"zh-CN": "zh_CN", "zh": "zh_CN", "ja-JP": "ja"}
+
+
+def normalize_locale(value):
+    locale = (value or "").strip()
+    locale = LOCALE_ALIASES.get(locale, locale.replace("-", "_"))
+    return locale if locale in LANGUAGE_OPTIONS else None
+
+
+def get_membership_plans():
+    return {
+        "free": {
+            "name": _("免费版"),
+            "price": _("￥0"),
+            "features": [_("多用户记账"), _("基础收支统计"), _("每月预算"), _("分类占比图")],
+            "limits": [_("高级统计、导出和 AI 分析暂未开放")],
+        },
+        "premium": {
+            "name": "Premium",
+            "price": _("敬请期待"),
+            "features": [_("高级统计"), _("数据导出"), _("自定义分类"), _("多账本"), _("AI 财务分析")],
+            "limits": [_("当前版本仅展示能力，不接入真实支付")],
+        },
+    }
+
+
+def get_language_options():
+    return {"zh_CN": _("简体中文"), "ja": _("日本語")}
+
+
+def get_currency_options():
+    return {
+        "CNY": _("人民币 CNY"),
+        "USD": _("美元 USD"),
+        "JPY": _("日元 JPY"),
+        "EUR": _("欧元 EUR"),
+    }
+
+
+def get_current_user_id():
+    return session.get("user_id")
+
+
+def get_current_user():
+    user_id = get_current_user_id()
+    if not user_id:
+        return None
+
+    with get_connection() as conn:
+        return conn.execute(
+            """
+            SELECT id, username, email, password_hash, nickname, language,
+                   currency, plan, premium_until, created_at
+            FROM users
+            WHERE id = ?
+            """,
+            (user_id,),
+        ).fetchone()
+
+
+def get_locale():
+    lang = normalize_locale(request.args.get("lang"))
+    if lang:
+        session["lang"] = lang
+        return lang
+
+    lang = normalize_locale(session.get("lang"))
+    if lang:
+        return lang
+
+    user = get_current_user()
+    if user:
+        lang = normalize_locale(user["language"])
+        if lang:
+            session["lang"] = lang
+            return lang
+
+    return app.config["BABEL_DEFAULT_LOCALE"]
+
+
+babel = Babel(app, locale_selector=get_locale)
 
 
 def normalize_email(value):
@@ -127,19 +197,19 @@ def validate_record_payload(data):
 
     parsed_date = parse_record_date(data.get("date", ""))
     if not parsed_date:
-        errors.append("日期格式无效")
+        errors.append(_("日期格式无效"))
 
     record_type = data.get("type", "")
     if record_type not in ("income", "expense"):
-        errors.append("类型必须是 income 或 expense")
+        errors.append(_("类型必须是 income 或 expense"))
 
     category = (data.get("category") or "").strip()
     if not category:
-        errors.append("分类不能为空")
+        errors.append(_("分类不能为空"))
 
     amount = parse_positive_amount(data.get("amount"))
     if amount is None:
-        errors.append("金额格式无效")
+        errors.append(_("金额格式无效"))
 
     if errors:
         return None, errors
@@ -161,18 +231,18 @@ def validate_register_payload(form):
     confirm_password = form.get("confirm_password") or ""
 
     if not username:
-        errors.append("用户名不能为空")
+        errors.append(_("用户名不能为空"))
 
     if not email:
-        errors.append("邮箱不能为空")
+        errors.append(_("邮箱不能为空"))
     elif not is_valid_email(email):
-        errors.append("邮箱格式无效")
+        errors.append(_("邮箱格式无效"))
 
     if len(password) < 8:
-        errors.append("密码至少需要 8 位")
+        errors.append(_("密码至少需要 8 位"))
 
     if password != confirm_password:
-        errors.append("两次输入的密码不一致")
+        errors.append(_("两次输入的密码不一致"))
 
     return {
         "username": username,
@@ -187,10 +257,10 @@ def validate_login_payload(form):
     password = form.get("password") or ""
 
     if not account:
-        errors.append("用户名或邮箱不能为空")
+        errors.append(_("用户名或邮箱不能为空"))
 
     if not password:
-        errors.append("密码不能为空")
+        errors.append(_("密码不能为空"))
 
     return {
         "account": account,
@@ -201,29 +271,29 @@ def validate_login_payload(form):
 def validate_settings_payload(form):
     errors = []
     nickname = (form.get("nickname") or "").strip()
-    language = (form.get("language") or "zh-CN").strip()
+    language = normalize_locale(form.get("language")) or "zh_CN"
     currency = (form.get("currency") or "CNY").strip()
     current_password = form.get("current_password") or ""
     new_password = form.get("new_password") or ""
     confirm_password = form.get("confirm_password") or ""
 
     if len(nickname) > 30:
-        errors.append("昵称不能超过 30 个字符")
+        errors.append(_("昵称不能超过 30 个字符"))
 
     if language not in LANGUAGE_OPTIONS:
-        errors.append("语言选项无效")
+        errors.append(_("语言选项无效"))
 
     if currency not in CURRENCY_OPTIONS:
-        errors.append("货币选项无效")
+        errors.append(_("货币选项无效"))
 
     wants_password_change = any([current_password, new_password, confirm_password])
     if wants_password_change:
         if not current_password:
-            errors.append("请输入当前密码")
+            errors.append(_("请输入当前密码"))
         if len(new_password) < 8:
-            errors.append("新密码至少需要 8 位")
+            errors.append(_("新密码至少需要 8 位"))
         if new_password != confirm_password:
-            errors.append("两次输入的新密码不一致")
+            errors.append(_("两次输入的新密码不一致"))
 
     return {
         "nickname": nickname,
@@ -265,14 +335,14 @@ def protect_csrf():
     if validate_csrf_token():
         return None
     if wants_json_response():
-        return jsonify({"ok": False, "error": "CSRF validation failed"}), 400
+        return jsonify({"ok": False, "error": _("CSRF validation failed")}), 400
     return render_template(
         "message.html",
         active_page="",
-        title="安全验证失败",
-        message="请求已过期或安全验证失败，请刷新页面后重试。",
+        title=_("安全验证失败"),
+        message=_("请求已过期或安全验证失败，请刷新页面后重试。"),
         action_url=url_for("index"),
-        action_text="返回首页",
+        action_text=_("返回首页"),
     ), 400
 
 
@@ -282,52 +352,31 @@ def render_error_response(status_code, message):
     return render_template(
         "message.html",
         active_page="",
-        title=f"{status_code} 错误",
+        title=_("%(status_code)s 错误", status_code=status_code),
         message=message,
         action_url=url_for("index"),
-        action_text="返回首页",
+        action_text=_("返回首页"),
     ), status_code
 
 
 @app.errorhandler(400)
 def handle_bad_request(error):
-    return render_error_response(400, "请求无效，请检查输入后重试。")
+    return render_error_response(400, _("请求无效，请检查输入后重试。"))
 
 
 @app.errorhandler(403)
 def handle_forbidden(error):
-    return render_error_response(403, "没有权限执行此操作。")
+    return render_error_response(403, _("没有权限执行此操作。"))
 
 
 @app.errorhandler(404)
 def handle_not_found(error):
-    return render_error_response(404, "页面或资源不存在。")
+    return render_error_response(404, _("页面或资源不存在。"))
 
 
 @app.errorhandler(500)
 def handle_server_error(error):
-    return render_error_response(500, "服务器暂时无法处理请求，请稍后重试。")
-
-
-def get_current_user_id():
-    return session.get("user_id")
-
-
-def get_current_user():
-    user_id = get_current_user_id()
-    if not user_id:
-        return None
-
-    with get_connection() as conn:
-        return conn.execute(
-            """
-            SELECT id, username, email, password_hash, nickname, language,
-                   currency, plan, premium_until, created_at
-            FROM users
-            WHERE id = ?
-            """,
-            (user_id,),
-        ).fetchone()
+    return render_error_response(500, _("服务器暂时无法处理请求，请稍后重试。"))
 
 
 def user_has_feature(user, feature):
@@ -340,7 +389,7 @@ def user_has_feature(user, feature):
 
 def require_login_json():
     if not get_current_user_id():
-        return jsonify({"error": "请先登录"}), 401
+        return jsonify({"error": _("请先登录")}), 401
     return None
 
 
@@ -379,18 +428,53 @@ def month_shift(month, offset):
 
 def get_budget_status(amount, used):
     if amount <= 0:
-        return "未设置预算"
+        return _("未设置预算")
     percent = used / amount * 100
     if percent >= 100:
-        return "已超出预算"
+        return _("已超出预算")
     if percent >= 80:
-        return "预算即将用完"
-    return "预算正常"
+        return _("预算即将用完")
+    return _("预算正常")
 
 
 @app.context_processor
 def inject_user_context():
-    return {"current_user_profile": get_current_user()}
+    current_language = str(get_locale())
+    return {
+        "current_user_profile": get_current_user(),
+        "current_language": current_language,
+        "language_options": get_language_options(),
+        "js_i18n": {
+            "requestFailed": _("请求失败，请稍后重试"),
+            "categories": {
+                "income": [_("工资"), _("奖金"), _("理财"), _("兼职"), _("其他收入")],
+                "expense": [_("餐饮"), _("交通"), _("购物"), _("住房"), _("娱乐"), _("医疗"), _("教育"), _("其他支出")],
+            },
+            "typeLabels": {"income": _("收入"), "expense": _("支出")},
+            "dateFormat": _("%(year)s年%(month)s月%(day)s日"),
+            "used": _("已用 %(amount)s"),
+            "remaining": _("%(status)s，剩余 %(amount)s"),
+            "edit": _("编辑"),
+            "delete": _("删除"),
+            "noNote": _("—"),
+            "pagination": _("第 %(page)s / %(total_pages)s 页，共 %(total)s 条"),
+            "recordDeleted": _("记录已删除"),
+            "deleteFailed": _("删除失败：%(message)s"),
+            "recordUpdated": _("记录已更新"),
+            "recordAdded": _("记录已添加"),
+            "budgetSaved": _("预算已保存"),
+            "income": _("收入"),
+            "expense": _("支出"),
+        },
+    }
+
+
+@app.get("/set-language/<language>")
+def set_language(language):
+    selected_language = normalize_locale(language)
+    if selected_language:
+        session["lang"] = selected_language
+    return redirect(request.referrer or url_for("dashboard"))
 
 
 @app.route("/")
@@ -441,10 +525,10 @@ def edit_record_page(record_id):
         return render_template(
             "message.html",
             active_page="records",
-            title="记录不存在",
-            message="这条记录不存在，或不属于当前登录用户。",
+            title=_("记录不存在"),
+            message=_("这条记录不存在，或不属于当前登录用户。"),
             action_url=url_for("records_page"),
-            action_text="返回记录列表",
+            action_text=_("返回记录列表"),
         ), 404
 
     return render_template("record_form.html", active_page="records", record_id=record_id)
@@ -478,8 +562,8 @@ def settings_page():
             "settings.html",
             active_page="settings",
             user=user,
-            language_options=LANGUAGE_OPTIONS,
-            currency_options=CURRENCY_OPTIONS,
+            language_options=get_language_options(),
+            currency_options=get_currency_options(),
             errors=[],
         )
 
@@ -490,7 +574,7 @@ def settings_page():
             user["password_hash"],
             form_data["current_password"],
         ):
-            errors.append("当前密码不正确")
+            errors.append(_("当前密码不正确"))
 
         if errors:
             updated_user = dict(user)
@@ -505,8 +589,8 @@ def settings_page():
                 "settings.html",
                 active_page="settings",
                 user=updated_user,
-                language_options=LANGUAGE_OPTIONS,
-                currency_options=CURRENCY_OPTIONS,
+                language_options=get_language_options(),
+                currency_options=get_currency_options(),
                 errors=errors,
             ), 400
 
@@ -541,7 +625,8 @@ def settings_page():
             )
         conn.commit()
 
-    flash("设置已保存", "success")
+    session["lang"] = form_data["language"]
+    flash(_("设置已保存"), "success")
     return redirect(url_for("settings_page"))
 
 
@@ -556,7 +641,7 @@ def premium_page():
         "premium.html",
         active_page="premium",
         user=user,
-        plans=MEMBERSHIP_PLANS,
+        plans=get_membership_plans(),
         has_premium_features=user_has_feature(user, "advanced_statistics"),
     )
 
@@ -589,7 +674,7 @@ def register():
                 (form_data["username"],),
             ).fetchone()
             if existing_username:
-                errors.append("用户名已存在")
+                errors.append(_("用户名已存在"))
 
         if form_data["email"]:
             existing_email = conn.execute(
@@ -597,7 +682,7 @@ def register():
                 (form_data["email"],),
             ).fetchone()
             if existing_email:
-                errors.append("邮箱已存在")
+                errors.append(_("邮箱已存在"))
 
         if errors:
             return render_template(
@@ -646,7 +731,7 @@ def login():
             user["password_hash"],
             form_data["password"],
         ):
-            errors.append("用户名/邮箱或密码错误")
+            errors.append(_("用户名/邮箱或密码错误"))
 
     if errors:
         return render_template(
@@ -742,7 +827,7 @@ def get_record(record_id):
         ).fetchone()
 
     if not row:
-        return jsonify({"error": "记录不存在"}), 404
+        return jsonify({"error": _("记录不存在")}), 404
 
     return jsonify(row_to_dict(row))
 
@@ -756,7 +841,7 @@ def get_summary():
     user_id = get_current_user_id()
     month = normalize_month(request.args.get("month"))
     if not month:
-        return jsonify({"error": "月份格式无效"}), 400
+        return jsonify({"error": _("月份格式无效")}), 400
 
     with get_connection() as conn:
         income = conn.execute(
@@ -795,7 +880,7 @@ def get_analytics():
     user_id = get_current_user_id()
     month = normalize_month(request.args.get("month"))
     if not month:
-        return jsonify({"error": "月份格式无效"}), 400
+        return jsonify({"error": _("月份格式无效")}), 400
 
     trend_months = [month_shift(month, offset) for offset in range(-5, 1)]
 
@@ -898,11 +983,11 @@ def save_budget():
     data = request.get_json(silent=True) or {}
     month = normalize_month(data.get("month"))
     if not month:
-        return jsonify({"error": "月份格式无效"}), 400
+        return jsonify({"error": _("月份格式无效")}), 400
 
     amount = parse_positive_amount(data.get("amount"))
     if amount is None:
-        return jsonify({"error": "预算金额格式无效"}), 400
+        return jsonify({"error": _("预算金额格式无效")}), 400
 
     with get_connection() as conn:
         conn.execute(
@@ -975,7 +1060,7 @@ def update_record(record_id):
         ).fetchone()
 
     if not existing:
-        return jsonify({"error": "记录不存在"}), 404
+        return jsonify({"error": _("记录不存在")}), 404
 
     payload, errors = validate_record_payload(
         request.get_json(silent=True) or {}
@@ -1022,7 +1107,7 @@ def delete_record(record_id):
             (record_id, user_id),
         ).fetchone()
         if not existing:
-            return jsonify({"error": "记录不存在"}), 404
+            return jsonify({"error": _("记录不存在")}), 404
 
         conn.execute(
             "DELETE FROM records WHERE id = ? AND user_id = ?",
